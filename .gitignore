@@ -1,0 +1,7 @@
+.env
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Keep recordings/ and transcripts/ tracked (contents may be gitignored later if needed)
