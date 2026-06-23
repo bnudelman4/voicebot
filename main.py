@@ -72,12 +72,13 @@ def _wait_for_completion(settings, call_sid: str, timeout: float = 300.0, interv
     return status
 
 
-def _run_test_call(target: str) -> None:
+def _place_and_collect(to_number: str, scenario_id: str | None) -> None:
+    """Place a call, wait for it to finish, then download the recording."""
     settings = load_settings()
-    to_number = target or settings.target_number
-    print(f"Placing test call to {to_number} ...")
+    label = f"scenario {scenario_id!r}" if scenario_id else "test call"
+    print(f"Placing {label} to {to_number} ...")
 
-    call_sid = place_call(to_number)
+    call_sid = place_call(to_number, scenario_id)
     print(f"Call SID: {call_sid}")
 
     status = _wait_for_completion(settings, call_sid)
@@ -91,6 +92,16 @@ def _run_test_call(target: str) -> None:
         print("No recording available (call may not have connected).")
 
 
+def _run_test_call(target: str) -> None:
+    settings = load_settings()
+    _place_and_collect(target or settings.target_number, None)
+
+
+def _run_scenario_call(scenario_id: str) -> None:
+    settings = load_settings()
+    _place_and_collect(settings.target_number, scenario_id)
+
+
 def main() -> None:
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
     args = build_parser().parse_args()
@@ -99,12 +110,11 @@ def main() -> None:
         _run_test_call(args.test_call)
         return
 
-    if args.list or not args.scenario:
-        _list_scenarios()
+    if args.scenario:
+        _run_scenario_call(args.scenario)
         return
 
-    # TODO (Phase 3): wire up the full scenario call flow through the audio bridge.
-    print(f"[stub] scenario call flow not implemented yet: {args.scenario!r}")
+    _list_scenarios()
 
 
 if __name__ == "__main__":
