@@ -104,6 +104,8 @@ def _run_scenario_call(scenario_id: str) -> None:
 
 def main() -> None:
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
+    for _noisy in ("twilio", "urllib3", "httpx", "httpcore"):
+        logging.getLogger(_noisy).setLevel(logging.WARNING)
     args = build_parser().parse_args()
 
     if args.test_call is not None:

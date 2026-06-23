@@ -28,6 +28,10 @@ from settings import load_settings
 
 logger = logging.getLogger("voicebot.server")
 
+# Quiet HTTP-client header spam so per-turn transcript lines stand out.
+for _noisy in ("twilio", "urllib3", "httpx", "httpcore"):
+    logging.getLogger(_noisy).setLevel(logging.WARNING)
+
 settings = load_settings()
 app = FastAPI(title="voicebot")
 
@@ -78,8 +82,19 @@ def _session_update(persona: str) -> dict:
             "audio": {
                 "input": {
                     "format": {"type": "audio/pcmu"},
-                    "turn_detection": {"type": "server_vad"},
-                    "transcription": {"model": "whisper-1"},
+                    "turn_detection": {
+                        "type": "server_vad",
+                        # Wait through short comma-length pauses before ending the
+                        # turn (default 500ms; raised to ride out natural pauses).
+                        "silence_duration_ms": 600,
+                        # Audio kept before detected speech start (default 300ms).
+                        "prefix_padding_ms": 300,
+                        # VAD sensitivity 0-1; higher = needs louder speech (default 0.5).
+                        "threshold": 0.5,
+                    },
+                    # whisper-1 is unreliable with G.711 mu-law; gpt-4o-mini-transcribe
+                    # transcribes the agent's audio reliably for the input turn.
+                    "transcription": {"model": "gpt-4o-mini-transcribe"},
                 },
                 "output": {
                     "format": {"type": "audio/pcmu"},
@@ -98,6 +113,7 @@ def _log_turn(state: dict, speaker: str, text: str) -> None:
     elapsed = time.monotonic() - state["start_time"]
     ts = f"{int(elapsed) // 60:02d}:{int(elapsed) % 60:02d}"
     state["turns"].append({"speaker": speaker, "text": text, "ts": ts})
+    logger.info("captured turn #%d speaker=%s ts=%s", len(state["turns"]), speaker, ts)
     print(f"[{ts}] {speaker.upper()}: {text}", flush=True)
 
 
@@ -109,6 +125,7 @@ async def media_stream(ws: WebSocket) -> None:
         "stream_sid": None,
         "start_time": time.monotonic(),
         "bot_speaking": False,
+        "response_active": False,  # True between response.created and response.done
         "turns": [],
         "in_frames": 0,       # (a) inbound audio frames forwarded to OpenAI
         "out_deltas": 0,      # (b) output-audio events OpenAI emitted
@@ -222,13 +239,19 @@ async def _openai_to_twilio(ws: WebSocket, openai_ws, state: dict) -> None:
                 state["bot_speaking"] = True
 
             elif etype == "input_audio_buffer.speech_started":
-                logger.info("openai VAD: agent speech started (bot_speaking=%s)", state["bot_speaking"])
-                # Barge-in: only cut the bot if it has actually started speaking
-                # this turn (avoids cancelling on the agent's opening words).
+                logger.info(
+                    "openai VAD: agent speech started (bot_speaking=%s response_active=%s)",
+                    state["bot_speaking"], state["response_active"],
+                )
+                # Barge-in: flush Twilio's queued bot audio if the bot is talking.
                 if state["bot_speaking"]:
                     await ws.send_json({"event": "clear", "streamSid": state["stream_sid"]})
-                    await openai_ws.send(json.dumps({"type": "response.cancel"}))
                     state["bot_speaking"] = False
+                # Only cancel when a response is actually in progress, else OpenAI
+                # returns "response_cancel_not_active".
+                if state["response_active"]:
+                    await openai_ws.send(json.dumps({"type": "response.cancel"}))
+                    state["response_active"] = False
 
             elif etype == "input_audio_buffer.speech_stopped":
                 logger.info("openai VAD: agent speech stopped (commit -> response expected)")
@@ -238,9 +261,14 @@ async def _openai_to_twilio(ws: WebSocket, openai_ws, state: dict) -> None:
 
             elif etype == "response.created":
                 logger.info("openai response.created (model is generating a reply)")
+                state["response_active"] = True
 
-            elif etype in ("response.output_audio.done", "response.done"):
+            elif etype == "response.output_audio.done":
                 state["bot_speaking"] = False
+
+            elif etype in ("response.done", "response.cancelled"):
+                state["bot_speaking"] = False
+                state["response_active"] = False
 
             elif etype in transcript_done_types:
                 _log_turn(state, "patient", event.get("transcript", ""))
