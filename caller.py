@@ -16,6 +16,9 @@ from settings import load_settings
 
 logger = logging.getLogger(__name__)
 
+# Hard cap on call length so a stuck/runaway call can't ring up indefinitely.
+MAX_CALL_SECONDS = 240
+
 
 def place_call(to_number: str, scenario_id: str | None = None) -> str:
     """Place a recorded outbound call to ``to_number``.
@@ -40,6 +43,7 @@ def place_call(to_number: str, scenario_id: str | None = None) -> str:
         to=to_number,
         url=url,
         record=True,
+        time_limit=MAX_CALL_SECONDS,  # safety cap; Twilio ends the call after this
     )
     logger.info("placed call from=%s to=%s sid=%s", settings.twilio_from_number, to_number, call.sid)
     return call.sid
