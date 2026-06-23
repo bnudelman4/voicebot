@@ -22,7 +22,7 @@ import time
 from caller import place_call
 from scenarios import SCENARIOS
 from settings import load_settings
-from transcripts import download_recording
+from transcripts import download_recording, find_sequence_for_call, transcript_path
 
 # Twilio call statuses that mean the call is over.
 _TERMINAL_STATUSES = {"completed", "failed", "busy", "no-answer", "canceled"}
@@ -84,12 +84,33 @@ def _place_and_collect(to_number: str, scenario_id: str | None) -> None:
     status = _wait_for_completion(settings, call_sid)
     print(f"Final call status: {status}")
 
+    # The server writes transcript-NN.txt at stream stop and embeds this SID.
+    # Recover that NN so the recording shares it (recording-NN.mp3).
+    seq = _wait_for_transcript_seq(call_sid)
+    if seq:
+        print(f"Transcript: {transcript_path(seq)}")
+    else:
+        print("Transcript not found (server may not have written it); using next number.")
+        from transcripts import next_sequence_number
+        seq = next_sequence_number()
+
     print("Downloading recording (may take a few seconds) ...")
-    path = download_recording(call_sid)
+    path = download_recording(call_sid, seq)
     if path:
-        print(f"Recording saved: {path}")
+        print(f"Recording:  {path}")
     else:
         print("No recording available (call may not have connected).")
+
+
+def _wait_for_transcript_seq(call_sid: str, timeout: float = 15.0, interval: float = 1.0) -> str | None:
+    """Poll for the server-written transcript that references call_sid; return its NN."""
+    deadline = time.monotonic() + timeout
+    while time.monotonic() < deadline:
+        seq = find_sequence_for_call(call_sid)
+        if seq:
+            return seq
+        time.sleep(interval)
+    return None
 
 
 def _run_test_call(target: str) -> None:

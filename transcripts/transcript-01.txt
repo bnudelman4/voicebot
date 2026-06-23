@@ -1,0 +1,24 @@
+Scenario:  new_appointment
+Call SID:  CAa7490b1f1e493839e86c4fca07af7d2e
+Date/time: 2026-06-23 14:57:33
+Patient:   Benjamin Nudelman, DOB 2006-03-31
+------------------------------------------------
+[00:06] AGENT: This call may be recorded for quality and training purposes. Para español, oprima el dos.
+[00:12] AGENT: Thanks for calling Pivot Point Orthopedics, part of PrettyGoodAI. Am I speaking with Benjamin?
+[00:14] PATIENT: Yes, this is Benjamin. Hi, I'm calling to book an appointment, if that's all right.
+[00:22] AGENT: Please provide your date of birth.
+[00:22] PATIENT: Sure, my date of birth is March 31st, 2006.
+[00:35] AGENT: The birthday doesn't match our records, but for demo purposes, I'll accept it. How can I help you today?
+[00:37] PATIENT: Thanks, I appreciate that. So, I’ve got this cough that’s been hanging around for a couple of weeks now, and I’d really like to see a doctor about it. I’m hoping to book an appointment, preferably on a weekday afternoon.
+[00:57] AGENT: It sounds like you need a general office visit for your cough. Does that sound right, or is this more urgent and you need to be seen as soon as possible?
+[00:59] PATIENT: A general office visit sounds right. It’s not super urgent, but I’d like to get it checked out soon. What kind of availability do you have in the next few days?
+[01:16] AGENT: We have weekday afternoon openings on Wednesday, June twenty-fourth.
+[01:29] AGENT: There are slots at 2 p.m., 3 p.m., and 3:30 p.m. with Dr. Zbigniew Lewkowski. Would you like to book one of these or hear about other days?
+[01:31] PATIENT: I think Wednesday, June 24th would work well. Let’s go with the 3:30 p.m slot with Dr. Zbigniew Lukovsky. Could you confirm the location for that appointment?
+[01:53] AGENT: Your appointment will be at Pivot Point Orthopedics, 123 Main Street, Los Angeles. Would you like me to book the 3:30 p.m. slot on Wednesday with Dr. Zbigniew Lukowski?
+[01:55] PATIENT: Yes, that sounds perfect. Please go ahead and book the 3:30 p.m. slot on Wednesday. Thank you.
+[02:14] AGENT: Your appointment is set for Wednesday, June 24th at 3:30 p.m. with Dr. Zbigniew Lokoski. Please bring your photo ID, insurance card.
+[02:20] AGENT: a list of your current medications, and any imaging discs if you have them. Let me know if you need anything else.
+[02:23] PATIENT: Thank you, that all sounds good. I think that’s everything I need. I’ll be there at 123 Main Street on June 24th at 3:30 p.m. Thanks again for your help!
+[02:44] AGENT: You're all set for your visit. We look forward to seeing you on June 24th at 3:30 p.m. Have a great day.
+[02:45] PATIENT: Thanks a lot! You too. I’ll see you then. Take care.

@@ -25,6 +25,7 @@ from twilio.twiml.voice_response import Connect, Stream, VoiceResponse
 
 from scenarios import get_scenario
 from settings import load_settings
+from transcripts import next_sequence_number, write_transcript
 
 logger = logging.getLogger("voicebot.server")
 
@@ -126,6 +127,8 @@ async def media_stream(ws: WebSocket) -> None:
         "start_time": time.monotonic(),
         "bot_speaking": False,
         "response_active": False,  # True between response.created and response.done
+        "call_sid": None,
+        "scenario_id": None,
         "turns": [],
         "in_frames": 0,       # (a) inbound audio frames forwarded to OpenAI
         "out_deltas": 0,      # (b) output-audio events OpenAI emitted
@@ -141,8 +144,10 @@ async def media_stream(ws: WebSocket) -> None:
             if data.get("event") == "start":
                 start = data["start"]
                 state["stream_sid"] = start["streamSid"]
+                state["call_sid"] = start.get("callSid")
                 state["start_time"] = time.monotonic()
                 scenario_id = (start.get("customParameters") or {}).get("scenario")
+                state["scenario_id"] = scenario_id
                 if scenario_id:
                     try:
                         persona = get_scenario(scenario_id).persona
@@ -168,6 +173,14 @@ async def media_stream(ws: WebSocket) -> None:
     except Exception as exc:  # noqa: BLE001 - log + end the call cleanly
         logger.error("bridge error: %s", exc)
     finally:
+        # Persist the transcript here (server owns the turns). It picks the NN
+        # and embeds the Call SID; main.py recovers that NN to name the mp3.
+        try:
+            seq = next_sequence_number()
+            path = write_transcript(state["turns"], seq, state["scenario_id"], state["call_sid"])
+            print(f"Transcript saved: {path}", flush=True)
+        except Exception as exc:  # noqa: BLE001 - never let writing crash teardown
+            logger.error("failed to write transcript: %s", exc)
         # Diagnostic summary: (a) in_frames, (b) out_deltas, (c) out_forwarded.
         logger.info(
             "call ended sid=%s turns=%d in_frames=%d out_deltas=%d out_forwarded=%d",
