@@ -17,7 +17,7 @@ from settings import load_settings
 logger = logging.getLogger(__name__)
 
 # Hard cap on call length so a stuck/runaway call can't ring up indefinitely.
-MAX_CALL_SECONDS = 240
+MAX_CALL_SECONDS = 300
 
 
 def place_call(to_number: str, scenario_id: str | None = None) -> str:

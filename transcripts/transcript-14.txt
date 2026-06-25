@@ -1,0 +1,24 @@
+Scenario:  interruption_barge_in
+Call SID:  CA05059a549cb181795a8f6c2a54bfd744
+Date/time: 2026-06-24 10:56:15
+Patient:   Benjamin Nudelman, DOB 2006-03-31
+------------------------------------------------
+[00:06] AGENT: This call may be recorded for quality and training purposes. Para español, oprima el dos.
+[00:13] AGENT: Thanks for calling Pivot Point Orthopedics, part of Pretty Good AI. Am I speaking with Benjamin?
+[00:14] PATIENT: Yeah, this is Benjamin. I wanted to go ahead and get an appointment scheduled, if we could.
+[00:22] AGENT: Please provide your date of birth.
+[00:24] PATIENT: Sure, it's March 31, 2006. And I’m also wondering—do you have any openings this week?
+[00:44] AGENT: We have openings this week. What type of appointment do you need? For example, is this for a new patient consultation, a follow-up, a routine visit, or something urgent?
+[00:45] PATIENT: It’s for a new patient consultation. I’d really prefer something early in the morning—do you have anything around 8 AM?
+[01:01] AGENT: It looks like you already have a new patient consultation appointment booked. If you want, I can help you reschedule or cancel that appointment.
+[01:05] AGENT: Would you like to make a change, or do you need help with something else?
+[01:06] PATIENT: Wait, I don’t think I have anything booked. Are you sure? I need to set up a brand-new appointment. What’s the first available morning slot?
+[01:21] AGENT: Let me double-check the system for the first available morning slot for a new patient consultation. One moment.
+[01:22] PATIENT: Actually, if you could check right now—maybe even before you finish looking—do you have anything open tomorrow morning?
+[01:43] AGENT: It appears the system thinks you already have a new patient consultation booked, so I can't schedule another one. I'll connect you with a live team member who can help sort this out right away. Please hold while I transfer you.
+[01:44] PATIENT: Hang on, I need this scheduled now—can you just confirm what that supposed appointment is? Then we can fix it.
+[01:56] AGENT: It looks like there's a new patient consultation already booked under your name, but you mentioned you don't have one. I'll connect you to our patient support team to help sort this out. Please stay on the line.
+[01:59] AGENT: Connecting you to a representative. Please wait.
+[01:59] PATIENT: Actually,
+[02:04] AGENT: Hello, you've reached the Pretty Good AI Test Line. Goodbye.
+[02:05] PATIENT: Oh, wait—I still need to book that appointment. Could you help me get that set up before you go?

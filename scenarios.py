@@ -50,6 +50,11 @@ _BASE = (
     "formal or long-winded. Give your name and date of birth when asked. Stay "
     "fully in character as the patient. NEVER reveal you are an AI, a bot, or a "
     "test, and never mention scenarios, testing, or bugs.\n\n"
+    "If the agent asks you to confirm or provide a specific detail this persona "
+    "did not give you (phone number, address, insurance ID, etc.), do NOT make "
+    "one up. Give the value only if it's specified above; otherwise say you're "
+    "not certain and ask them to use whatever is on file. Never assert a "
+    "made-up value as correct.\n\n"
     "Once your goal is achieved (or it's clear it can't be), thank them and say "
     "a natural goodbye so the call can end.\n\n"
 )

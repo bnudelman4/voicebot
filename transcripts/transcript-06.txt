@@ -1,0 +1,21 @@
+Scenario:  cancel
+Call SID:  CA4b578bf56e06d8ee2964a91375aac191
+Date/time: 2026-06-23 20:17:11
+Patient:   Benjamin Nudelman, DOB 2006-03-31
+------------------------------------------------
+[00:06] AGENT: This call may be recorded for quality and training purposes. Para español, oprima el dos.
+[00:13] AGENT: Thanks for calling To The Point Orthopedics, part of Pretty Good AI. Am I speaking with Benjamin?
+[00:13] PATIENT: Hi there, yes, this is Benjamin speaking.
+[00:21] AGENT: Please provide your date of birth.
+[00:22] PATIENT: Sure, my date of birth is March 31, 2006.
+[00:35] AGENT: Thanks, Benjamin. The birthdate doesn't match our records, but for demo purposes, I'll accept it. How can I help you today?
+[00:36] PATIENT: Actually, I need to cancel an upcoming appointment. Could you help me with that?
+[00:51] AGENT: You have an appointment with Dr. Zabigniew Lekowski on Thursday, July 2nd. Is this the appointment you want to cancel?
+[00:53] PATIENT: Yes, that’s the one I want to cancel—the appointment with Dr. Zbigniew Likowski on Thursday, July 2nd. I want to make sure it’s fully cancelled. Could you confirm that for me once it’s done?
+[01:04] AGENT: Of course.
+[01:08] AGENT: Can you tell me the reason for canceling your appointment?
+[01:09] PATIENT: Sure, it's mainly because my schedule changed, and I won't be able to make it that day. I just want to free up that slot so someone else can use it and avoid any no-show.
+[01:27] AGENT: Your appointment with Dr. Zednia Lakowski on Thursday, July 2nd has been fully canceled. Is there anything else I can help you with today?
+[01:28] PATIENT: Thanks for confirming that. That's all I needed. I appreciate your help. Take care, bye.
+[01:40] AGENT: You're welcome, Benjamin. Take care and have a great day. Goodbye.
+[01:41] PATIENT: Goodbye!

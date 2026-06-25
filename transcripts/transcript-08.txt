@@ -1,0 +1,38 @@
+Scenario:  ambiguous_date
+Call SID:  CA1565095fcc63f1ddf153fdf690a9686c
+Date/time: 2026-06-23 20:36:25
+Patient:   Benjamin Nudelman, DOB 2006-03-31
+------------------------------------------------
+[00:06] AGENT: This call may be recorded for quality and training purposes. Para español, oprima el dos.
+[00:12] AGENT: Thanks for calling Pivot Point Orthopedics, part of Pretty Good AI. Am I speaking with Benjamin?
+[00:13] PATIENT: Hi, yes, this is Benjamin.
+[00:18] AGENT: Please tell me your date of birth.
+[00:19] PATIENT: Sure, it's March 31st, 2006.
+[00:30] AGENT: The birthday doesn't match our records, but for demo purposes, I'll accept it.
+[00:31] AGENT: How can I help you today?
+[00:32] PATIENT: Thanks. I'd like to set up an appointment, maybe sometime around the end of this month. Could you help me find a spot?
+[00:50] AGENT: Of course. What is the main reason for your visit? For example, is this for a routine checkup, a new patient consultation, a follow-up, or something urgent?
+[00:51] PATIENT: It’s for a new patient consultation. I need to get some advice about knee pain I’ve been having lately.
+[01:03] AGENT: You already have a new patient consultation appointment booked, if you want to reschedule or cancel it...
+[01:04] AGENT: I can help with that.
+[01:09] AGENT: Would you like to make a change to your existing appointment, or do you need something else?
+[01:10] PATIENT: Actually, I’m not aware of any existing appointment. I’d like to make a brand-new one. Could we set that up?
+[01:28] AGENT: Looks like the system won't let me book another new patient consultation since you already have one scheduled. I recommend speaking with a live team member to sort this out. Would you like me to transfer you now?
+[01:29] PATIENT: I understand. Before transferring, could you tell me the exact date you see for that appointment? Then I’ll know how to adjust.
+[01:45] AGENT: You have a new patient appointment scheduled for Tuesday, June 30th at 12:45 p.m. with Dr. Duty Hauser.
+[01:48] AGENT: If you want to reschedule or cancel this, just let me know.
+[01:49] PATIENT: Thanks for that. Let’s go ahead and reschedule that to something like next Friday. Could you check what time slots are open then?
+[02:15] AGENT: The next available appointment is Tuesday, July 7th at 12:45 p.m. in Nashville with Dr. Duty Hauser. There are also openings at 3 p.m. and 3:45 p.m. that day. Would any of these work for you, or would you like to look at other dates or times?
+[02:15] PATIENT: I was hoping for something on that Friday. Could you check what’s available that Friday after July 7th?
+[02:27] AGENT: There aren't any openings on Friday, July 10th, or the following Fridays.
+[02:33] AGENT: Would you like to try a different day or time, or should I transfer you to a live team member for more help?
+[02:35] PATIENT: Let’s try a different day. How about the Friday before that? What’s open then?
+[03:03] AGENT: There are no openings on Friday, July 3rd or nearby Fridays. Would you like to try a different day or time, or should I transfer you to a live team member for more options? There aren't any openings on Friday, July 3rd either. Would you like to try a different day or time, or should I transfer you to a live team member who can help you find more options?
+[03:04] PATIENT: Let’s try a time on that Tuesday, July 7th. I’ll take the 3 p.m. slot. Can we confirm that?
+[03:13] AGENT: Before I reschedule, can you tell me the reason you need to move your appointment?
+[03:18] AGENT: For example, is it a schedule conflict, transportation issue, or something else?
+[03:19] PATIENT: It’s a schedule conflict on my side, so I need to move it to that 3 p.m. slot on July 7th. Let’s go ahead with that.
+[03:39] AGENT: Your appointment has been rescheduled to Tuesday, July 7th at 3 p.m. with Dr. Duty Houser. Would you like me to send you a text message with these details?
+[03:40] PATIENT: Yes, that would be great. Please send the text. Thanks for your help.
+[03:58] AGENT: You'll get a text with your updated appointment details soon. Is there anything else I can help you with today? You should get a text with your updated appointment details soon. If you need anything else, just let me know.
+[03:59] PATIENT: That’s all I need. I appreciate it. Thanks again, take care.

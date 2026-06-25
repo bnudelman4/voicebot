@@ -1,89 +1,126 @@
 # voicebot
 
-Automated outbound voice bot. Places phone calls via Twilio to a test line,
-bridges audio between Twilio Media Streams and the OpenAI Realtime API so it can
-hold a natural spoken conversation as a "patient," records each call, and saves
-transcripts.
+An automated outbound voice bot that places a real phone call to a test line and
+role-plays a patient to stress-test a clinic's AI receptionist. It dials out via
+Twilio, bridges the call audio to the OpenAI Realtime API (speech-to-speech) so
+it can hold a natural spoken conversation as the patient, records each call, and
+saves a timestamped transcript. surfacing where the receptionist under test
+misbehaves. The clinic under test is **Pivot Point Orthopedics** (Pretty Good
+AI's demo receptionist) and the patient persona is **Benjamin Nudelman**
+(DOB March 31, 2006), who has only a name and DOB on file. Thirteen scenarios
+cover routine front-desk tasks plus adversarial edge cases (closed-day booking,
+nonexistent records, controlled-substance refills, identity corrections,
+barge-in, and more); findings are logged in `bug-report.md`.
 
-> **Status:** scaffolding only. Modules are documented stubs; the audio bridge
-> and call logic are not implemented yet.
-
-## Overview
-
-The bot dials a number (`TARGET_NUMBER`), and once connected streams audio in
-both directions: the called party's audio goes to the OpenAI Realtime API, and
-the model's synthesized speech goes back to the call. A scenario's `persona`
-system prompt makes the model act as the patient **Benjamin Nudelman (DOB March
-31, 2006)** with a specific goal (book an appointment, refill a prescription,
-ask about office hours). Each call is recorded and transcribed.
-
-## Architecture
-
-_Placeholder — to be filled in as the bridge is implemented._
-
-```
-main.py ──places call──▶ Twilio ──dials──▶ TARGET_NUMBER
-                           │
-                           ▼ (TwiML: <Connect><Stream>)
-                    server.py  /twiml  +  /media-stream (websocket)
-                           │
-                           ▼ raw websocket
-                  OpenAI Realtime API (gpt-realtime)
-```
-
-- `settings.py` — load + validate env config.
-- `scenarios.py` — patient personas (system prompts).
-- `caller.py` — place the recorded outbound call (Twilio REST).
-- `server.py` — TwiML endpoint + Twilio↔OpenAI audio bridge (FastAPI).
-- `transcripts.py` — write transcript files; download recordings as mp3.
-- `main.py` — CLI to pick a scenario and trigger a call.
+Walkthrough / Debug video link: https://www.loom.com/share/87e6d992e020460eb86f327feb83172a
 
 ## Setup
 
-```bash
-# 1. Create and activate a virtual environment (Python 3.11+)
-python3 -m venv .venv
-source .venv/bin/activate
-
-# 2. Install dependencies
-pip install -r requirements.txt
-
-# 3. Configure
-cp .env.example .env
-# then edit .env and fill in your real values
-
-# 4. Start ngrok on your configured domain (must match PUBLIC_HOST in .env)
-ngrok http --domain=your-domain.ngrok.app 8080
-```
+1. **Python 3.11+ and a virtualenv:**
+   ```bash
+   python -m venv .venv
+   source .venv/bin/activate
+   ```
+2. **Install dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
+3. **Configure:** copy the example env file and fill in real values.
+   ```bash
+   cp .env.example .env
+   # then edit .env
+   ```
+4. **Accounts:** a Twilio account that is **out of trial** with a **voice-capable
+   phone number** (set as `TWILIO_FROM_NUMBER`), and an **OpenAI API key with
+   Realtime access**.
+5. **ngrok:** run it on your reserved domain so `PUBLIC_HOST` stays stable
+   between runs. With `PUBLIC_HOST` and `PORT` set in `.env`:
+   ```bash
+   ngrok http --domain=$PUBLIC_HOST 8080
+   ```
+   (`PUBLIC_HOST` is the hostname only, no `https://` prefix.)
+6. **No Twilio webhook config needed.** The outbound call passes the TwiML URL
+   programmatically (`https://PUBLIC_HOST/twiml`), so you do **not** have to
+   configure the phone number's voice webhook in the Twilio console.
 
 ## Run
 
-Two pieces: the server (so Twilio can reach `PUBLIC_HOST`) and the CLI.
+The server and ngrok must both be running first, in their own terminals:
 
 ```bash
-# Terminal 1 — start the server
+# Terminal 1 — FastAPI server (audio bridge)
 uvicorn server:app --host 0.0.0.0 --port 8080
 
-# Terminal 2 — list scenarios, then place a call
-python main.py --list
+# Terminal 2 — ngrok on the reserved domain
+ngrok http --domain=$PUBLIC_HOST 8080
+```
+
+Then place a call (Terminal 3). The primary path:
+
+```bash
+# Run a scenario call (dials TARGET_NUMBER as the patient persona)
 python main.py --scenario new_appointment
 ```
 
+Other commands (`main.py`):
+
+```bash
+# List all scenarios (id + title)
+python main.py --list
+
+# Plain test call (no persona): rings TARGET_NUMBER and records it
+python main.py --test-call
+
+# Test call to a specific number
+python main.py --test-call +15551234567
+```
+
+A scenario call places the call, polls until it completes, then downloads the
+recording — printing both the transcript and recording paths when done.
+
 ## Scenarios
 
-Defined in `scenarios.py`. Current set:
+Thirteen scenarios (ids and titles from `scenarios.py`):
 
-| id | title |
-|----|-------|
-| `new_appointment` | New appointment booking |
-| `prescription_refill` | Prescription refill |
-| `office_hours` | Office-hours question |
+| id                            | description                                        |
+| ----------------------------- | -------------------------------------------------- |
+| `new_appointment`             | Book a new appointment for knee pain               |
+| `reschedule`                  | Reschedule an appointment to a different day       |
+| `cancel`                      | Cancel an upcoming appointment                     |
+| `refill`                      | Refill an ortho medication (meloxicam)             |
+| `hours_location_insurance`    | Ask hours, location, and whether they take Aetna   |
+| `closed_day_booking`          | Insist on a Saturday (closed-day) slot             |
+| `ambiguous_date`              | Book using vague date language ("next Friday")     |
+| `nonexistent_record`          | Reschedule an appointment that doesn't exist       |
+| `controlled_substance_refill` | Request an oxycodone refill                        |
+| `topic_switch`                | Start booking, then pivot to another task mid-call |
+| `wrong_then_corrected_dob`    | Give a wrong DOB, then correct it                  |
+| `out_of_scope`                | Ask something a scheduling line shouldn't answer   |
+| `interruption_barge_in`       | Intentionally talk over the agent to test barge-in |
 
-More will be added later. All use the patient identity Benjamin Nudelman, DOB
-March 31, 2006.
+## Output
 
-## Output locations
+Each call produces a paired set of files sharing the same two-digit number `NN`:
 
-- **Recordings:** `recordings/` — Twilio call recordings downloaded as mp3.
-- **Transcripts:** `transcripts/` — per-call, timestamped, both-sides text.
-- **Bug report:** _TBD_ — where call issues / failures will be logged.
+- `transcripts/transcript-NN.txt` — header (scenario, call SID, date/time,
+  patient identity) followed by one `[MM:SS] SPEAKER: text` line per turn.
+- `recordings/recording-NN.mp3` — the Twilio call recording.
+
+The same `NN` ties a transcript to its recording. Findings and observed
+misbehavior are written up in **`bug-report.md`**.
+
+## Environment variables
+
+Every variable in `.env.example` (no real values shown):
+
+| Variable                | Description                                                  |
+| ----------------------- | ------------------------------------------------------------ |
+| `OPENAI_API_KEY`        | OpenAI API key with Realtime access                          |
+| `OPENAI_REALTIME_MODEL` | Realtime model name (default `gpt-realtime`)                 |
+| `OPENAI_VOICE`          | Voice the model speaks with (e.g. `marin`, `cedar`, `alloy`) |
+| `TWILIO_ACCOUNT_SID`    | Twilio Account SID (starts with `AC`)                        |
+| `TWILIO_AUTH_TOKEN`     | Twilio Auth Token                                            |
+| `TWILIO_FROM_NUMBER`    | Voice-capable Twilio number to call from (E.164)             |
+| `TARGET_NUMBER`         | Number the bot calls — the clinic test line (E.164)          |
+| `PUBLIC_HOST`           | ngrok hostname only, no `https://` (e.g. `my-bot.ngrok.app`) |
+| `PORT`                  | Local port uvicorn binds to (default `8080`)                 |

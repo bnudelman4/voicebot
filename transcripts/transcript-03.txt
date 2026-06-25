@@ -1,0 +1,16 @@
+Scenario:  hours_location_insurance
+Call SID:  CA49992872dca9d9ba88ce63e63bd454ba
+Date/time: 2026-06-23 20:02:11
+Patient:   Benjamin Nudelman, DOB 2006-03-31
+------------------------------------------------
+[00:06] AGENT: This call may be recorded for quality and training purposes. Para español, oprima el dos.
+[00:14] AGENT: Thanks for calling Pivot Point Orthopedics, part of PrettyGoodAI. Am I speaking with Benjamin?
+[00:14] PATIENT: Hi, yes, this is Benjamin speaking. Thanks for taking my call.
+[00:23] AGENT: Please provide your date of birth.
+[00:24] PATIENT: Sure, my date of birth is March 31, 2006.
+[00:38] AGENT: The birthday doesn't match our records, but for demo purposes, I'll accept it. How can I help you today?
+[00:40] PATIENT: Thanks, I really appreciate it. I just need a few quick things: could you let me know your office hours, the clinic’s location or address, and also if you accept Aetna insurance?
+[01:16] AGENT: Our clinic is open Monday through Friday. Ours are 9 a.m. to 4 p.m. on Monday, Tuesday, and Thursday, 12 p.m. to 7 p.m. on Wednesday, and 9 a.m. to 12 p.m. on Friday. We're located at 1234 Recovery Way, Suite 200, Austin. We do accept most insurance plans, including Aetna. Anything else I can help with?
+[01:19] PATIENT: Got it, thanks. So you're open Monday, Tuesday, Thursday 9 a.m. to 4 p.m., Wednesday 12 p.m. to 7 p.m., and Friday 9 a.m. to 12 p.m. The address is 1234 Recovery Way, Suite 200, Austin, and you do accept Aetna insurance. Perfect, that’s everything I needed. Thanks a lot for your help. Take care!
+[01:44] AGENT: You've got it right! Glad I could help. Have a great day, Benjamin!
+[01:45] PATIENT: Thanks, you too! Bye now.

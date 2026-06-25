@@ -1,0 +1,24 @@
+Scenario:  new_appointment
+Call SID:  CA57a9bdd9dc6c584502e735f8460dba09
+Date/time: 2026-06-23 16:46:26
+Patient:   Benjamin Nudelman, DOB 2006-03-31
+------------------------------------------------
+[00:06] PATIENT: Hi, good afternoon.
+[00:06] AGENT: This call may be recorded for quality and training purposes. Para español, oprima el dos.
+[00:13] PATIENT: Yes, this is Benjamin.
+[00:14] AGENT: Thanks for calling Pivot Point Orthopedics, part of PrettyGoodAI. Am I speaking with Benjamin?
+[00:20] AGENT: Please provide your date of birth.
+[00:21] PATIENT: Sure, my date of birth is March 31, 2006.
+[00:33] AGENT: The birthdate doesn't match our records, but for demo purposes, I'll accept it. How can I help you today?
+[00:34] PATIENT: Thanks, I appreciate that. I’ve been having some knee pain for a couple of weeks, and I’d like to book a new appointment. How about next Wednesday afternoon?
+[00:53] AGENT: Sounds like you need an appointment for knee pain. Just to confirm, is this an urgent concern that you'd same-day attention, or is it more of a routine office visit?
+[00:55] PATIENT: It’s more of a routine visit. I’ve had it for a couple of weeks, so next Wednesday afternoon would be perfect if there’s an opening.
+[01:17] AGENT: It looks like you already have an office visit appointment booked for knee pain. If you want, I can help you reschedule or cancel that appointment, or I can connect you to a team member for further help. What would you like to do?
+[01:18] PATIENT: I’m not aware of any existing appointment. Are you sure? Could you double-check the details on that one? I really want to book a new slot next Wednesday afternoon if possible.
+[01:40] AGENT: I'm unable to book a new office visit since the system shows you already have one scheduled. I can connect you to a team member who can review your appointments and help further. Would you like me to transfer you now?
+[01:41] PATIENT: Alright, yes, please go ahead and transfer me to a team member so we can confirm that appointment or adjust it. That’d be great.
+[01:51] AGENT: I'll connect you to our patient support team so they can help review your appointments and book a new visit. Please stay on the line.
+[01:55] AGENT: Connecting you to a representative. Please wait.
+[01:55] PATIENT: Thank you, I’ll hold on.
+[02:00] AGENT: Hello, you've reached the Pretty Good AI test line. Goodbye.
+[02:01] PATIENT: Oh, I was actually hoping to confirm my appointment. Could we quickly check that before we end the call?
